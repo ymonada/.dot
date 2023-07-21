@@ -1,0 +1,11 @@
+configuration {
+  display-drun: "Програмы:   ";
+  display-window: "Window";
+  drun-display-format: "{icon} {name}";
+  font: "JetBrainsMono Nerd Font Medium 16";
+  modi: "window,run,drun";
+  show-icon: true;
+  icon-theme:         "Mato";
+}
+@theme "purple.rasi"
+
