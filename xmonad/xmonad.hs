@@ -22,17 +22,7 @@ import qualified Data.Map        as M
 
 
 
--- startup :: X ()
--- startup = do 
---     spawn "killall picom xwinwrap feh"
---     spawn "picom --experimental-backend"
---     spawn $ "sleep 0.3 && xwinwrap -ni -fdt -sh rectangle -un -b -nf -ovr" ++ 
---             " -fs -- mpv -wid WID --no-config --keepaspect=no --loop" ++
---             " --no-border --vd-lavc-fast --x11-bypass-compositor=no" ++
---             " --gapless-audio=yes --aid=no --vo=xv --hwdec=auto" ++
---             " --really-quiet --pause" ++
---             " --input-ipc-server=/tmp/mpv-bg-socket ~/.wallpaper/Nun.mp4"
---
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -240,7 +230,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore 
-    , className =? "Telegram Desktop" --> (doRectFloat $ W.RationalRect 0.7 0.9 0.3 0.3)]
+    , className =? "telegram-desktop" --> (doRectFloat $ W.RationalRect 0.7 0.9 0.3 0.3)]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -270,7 +260,8 @@ myLogHook = return ()
 --
 -- 
 myStartupHook = do 
-    spawnOnce "~/scripts/wallpaper-wrap"
+    spawnOnce "~/scripts/wallpaper-wrap"  --Живые обои
+    --spawnOnce "feh --bg-scale --randomize ~/.wallpaper/img/*"--Обои
     -- spawnOnce "picom --config ~/.config/picom/picom.conf --experimental-backend -b"
     -- spawnOnce "eww open bar"
 
