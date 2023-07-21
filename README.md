@@ -3,3 +3,4 @@
 mpv
 xwinwrap-git
 
+  chmod +x ./scripts/wallpaper-*
