@@ -1,1 +1,5 @@
-# .dot
+.xmonad
+.wallpaper
+mpv
+xwinwrap-git
+
