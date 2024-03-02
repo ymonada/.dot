@@ -1,9 +1,9 @@
 {  
-    "height": 30, 
-
+    "height": 25, 
+    "layer": "top",
     "spacing": 4, 
   
-    "modules-left": ["hyprland/workspaces", "hyprland/window", "hyprland/mode", "hypland/scratchpad", "custom/media"],
+    "modules-left": ["hyprland/workspaces", "hyprland/window", "hyprland/mode",  "custom/media"],
     "modules-center": [],
     "modules-right": ["mpd", "tray", "pulseaudio", "hyprland/language", "cpu", "memory", "battery", "battery#bat2", "clock"],
     "hyprland/workspaces": {
@@ -13,17 +13,27 @@
         "persistent_workspaces": {
             "*": 7
         }
-        // "format": "{icon}",
-        //  "format-icons": {
-        //     "active": "",
-        //     "default": ""
-        // }
-         
      },
+     "wlr/taskbar": {
+        "format": "{icon} {name}",
+        "icon-size": 18,
+        "all-outputs": false,
+        "tooltip-format": "{title}",
+        "markup": false,
+        "on-click": "activate",
+        "on-click-right": "close",
+        "app_ids-mapping": {
+      "firefoxdeveloperedition": "firefox-developer-edition"
+    },
+        "rewrite": {
+            "Веб-браузер Firefox": "Firefox",
+            "Foot Server": "Terminal"
+        }
+      },
     "keyboard-state": {
         "numlock": true,
         "capslock": true,
-        "format": "{name} {icon}",
+        "format": "{name} {app_id}",
         "format-icons": {
             "locked": "",
             "unlocked": ""
@@ -31,7 +41,7 @@
     },
     "hyprland/window": {
         "format": "<span font='14'rise='-4444'>{}</span>" ,
-        "max-length": 360,
+        "max-length": 180,
         "separate-outputs": true
     },
     "hyprland/mode": {
@@ -111,7 +121,7 @@
         "tooltip": false
     },
     "memory": {
-        "format": " {}%"
+        "format": " {used:0.1f}G"
     },
     "battery": {
         "states": {

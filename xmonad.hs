@@ -2,28 +2,33 @@ import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
-import XMonad.Actions.WindowGo
 import XMonad.Util.SpawnOnce
+import XMonad.Util.EZConfig(additionalKeys)
 
+import XMonad.Actions.WindowGo
+import XMonad.Actions.FloatSnap
 import XMonad.Actions.TiledWindowDragging
-import XMonad.Layout.DraggingVisualizer
+import XMonad.Actions.MouseResize
+
+
+import XMonad.Layout.Reflect
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
+import XMonad.Layout.ResizableTile
 import XMonad.Layout.MouseResizableTile
-import XMonad.Layout.BorderResize
 import qualified XMonad.Actions.FlexibleManipulate as Flex
 
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageHelpers
-import XMonad.Layout.Reflect
-import XMonad.Actions.FloatSnap
-import XMonad.Layout.MouseResizableTile
+import XMonad.Hooks.EwmhDesktops
+
+
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 
-myTerminal      = "kitty"
+myTerminal      = "alacritty"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
@@ -44,75 +49,66 @@ toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else (W.float w (W.RationalRect (1/3) (1/4) (1/2) (4/5)) s))
 
+
+
+
+myLayout = smartBorders $ mouseResizableTile {draggerType = BordersDragger}||| noBorders Full
+  
+--ResizableTall 1 (3/100) (1/2) [] smartBorders $ 
+
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Програмы
     [ ((alt,                xK_Return), spawn $ XMonad.terminal conf)
     , ((modm,               xK_p     ), spawn "rofi -show drun")
     , ((alt,                xK_w     ), spawn "firefox")
-    , ((alt,                xK_e     ), spawn "thunar")
+    , ((alt,                xK_e     ), spawn "nemo")
     , ((alt,                xK_t     ), spawn "telegram-desktop")
     , ((alt,                xK_p     ), spawn "gmrun")
     
-
-
     -- Управления окнами
-   
-
     -- Закрыть
     , ((modm ,              xK_c     ), kill)
-
      -- Переместить фокус на следующее окно по мере открытия
     , ((modm,               xK_space ), sendMessage NextLayout)
-
     -- Превести размер окон в дефолт 
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-
     -- Переместить фокус на следуещее окно
     , ((modm,               xK_Tab   ), windows W.focusDown)
-
     -- Переместить фокус на следуещее окно вниз
     , ((modm,               xK_j     ), windows W.focusDown)
-
     -- Переместить фокус на предыдущее окно
     , ((modm,               xK_k     ), windows W.focusUp  )
-
     -- Переместить фокус на главное окно
     , ((modm,               xK_m     ), windows W.focusMaster  )
-
     -- Поменять местами окно в фокусе и главное
     , ((modm,               xK_Return), windows W.swapMaster)
-
     -- Поменять окно в фокусе и следующее
     , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Поменять местами в фокусе и предыдущее
+     -- Поменять местами в фокусе и предыдущее
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
 
-
-    ,((modm, xK_space), withFocused toggleFloat)
-           
+    ,((modm, xK_space), withFocused toggleFloat)   
     -- super + , Уменьшить номер главного окна на 1
     , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
-
     -- Увеличить номер главного окна на 1
     -- Может выходить за рамки индексов
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
     -- Правильно размещает окна
     , ((modm,               xK_n     ), refresh)
 
-    	 , ((modm,               xK_h     ), sendMessage Shrink)
-	 , ((modm,               xK_l     ), sendMessage Expand)
-	 , ((modm,               xK_k), sendMessage ShrinkSlave) -- %! Shrink a slave area
-	 , ((modm,               xK_j), sendMessage ExpandSlave)
-  
+    , ((modm,               xK_h     ), sendMessage Shrink)
+	, ((modm,               xK_l     ), sendMessage Expand)
 
+
+    
+	--, ((modm,               xK_k), sendMessage MirrorShrink) -- %! Shrink a slave area
+	--, ((modm,               xK_j), sendMessage MirrorExpand)
+  
     -- Выход с xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
-
     -- Перезапуск xmonad
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
-
     -- Подсказки
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
     ]
@@ -144,21 +140,10 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-button1, Переводит окно в плавающее
     [ ((modm, button1), dragWindow)
 	, ((modm, button1),(\w -> focus w >> Flex.mouseWindow Flex.position w))
-	, ((modm, button3),(\w -> focus w >> Flex.mouseWindow Flex.discrete w))
+	, ((modm, button3), withFocused $ \f -> mouseResizeWindow f False)
+       --(\w -> focus w >> mouseResizeWindow w))
 
     ]
-
-myLayout = draggingVisualizer $ borderResize tiled ||| Mirror tiled ||| noBorders Full
-  where
-	tiled   = smartSpacing 3 $ Tall nmaster delta ratio
-
-	
-
-        nmaster = 1
-
-        ratio   = 1/2
-
-        delta   = 3/100
 
 myManageHook = composeAll
     [ insertPosition End Newer
@@ -178,7 +163,7 @@ myStartupHook = do
     -- spawnOnce "picom --config ~/.config/picom/picom.conf --experimental-backend -b"
     -- spawnOnce "eww open bar"
 
-main = xmonad defaults
+main = xmonad $ ewmh $ ewmhFullscreen defaults
 
 defaults = def {
       -- simple stuff
