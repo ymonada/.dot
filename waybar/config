@@ -1,14 +1,15 @@
 {  
-    "height": 20, 
+    "height": 16, 
     "layer": "top",
     "spacing": 4, 
   
     "modules-left": ["hyprland/workspaces","custom/logo", "hyprland/window", "hyprland/mode",  "custom/media"],
     "modules-center": [],
-    "modules-right": ["tray", "pulseaudio", "hyprland/language", "cpu", "memory", "battery", "battery#bat2", "clock"],
+    "modules-right": ["tray", "pulseaudio", "hyprland/language", "cpu", "memory", "battery",  "clock"],
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
+        "active-only": false,
         "disable-markup": false,
         "persistent_workspaces": {
             "*": 7
@@ -42,7 +43,7 @@
     "hyprland/window": {
         "format": "<span font='12'rise='-4444'>{}</span>" ,
         "max-length": 180
-        //"separate-outputs": true
+    
     },
     "hyprland/mode": {
         "format": "<span style=\"italic\">{}</span>"
@@ -55,7 +56,10 @@
         "tooltip-format": "{app}: {title}"
     },
     "hyprland/language": {
-        "format": "{short}",
+        "format": {},
+        "format-en": "EN 🇬🇧", 
+        "format-ru": "RU 🇷🇺",
+        "format-uk": "UA 🇺🇦",
         "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
     },
     "mpd": {
@@ -96,53 +100,31 @@
         
         "spacing": 7
     },
-    "clock": {
-        "timezone": "Europe/Kyiv",
-        "format": " {:%H:%M}",
-        "format-alt": " {:%H:%M   %Y, %d %B, %A}",
-        "tooltip-format": "<tt><small>{calendar}</small></tt>",
-        "calendar": {
-          "mode"          : "year",
-          "mode-mon-col"  : 3,
-          "weeks-pos"     : "right",
-          "on-scroll"     : 1,
-          "on-click-right": "mode",
-          "format": {
-          "months":     "<span color='#ffead3'><b>{}</b></span>",
-          "days":       "<span color='#ecc6d9'><b>{}</b></span>",
-          "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
-          "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
-          "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
-                    }
-        }
-    },
+   
     "cpu": {
         "format": " {usage}%",
         "tooltip": false,
         "on-click": "foot --title=htop htop" 
     },
     "memory": {
-        "format": " {used:0.1f}G"
+        "format": " {used:0.1f}G"
     },
     "battery": {
         "states": {
-            // "good": 95,
+            "good": 95,
             "warning": 30,
-            "critical": 15
+            "critical": 20
         },
-        "format": "{icon} {capacity}% ",
-        "format-charging": " {capacity}% ",
-        "format-plugged": " {capacity}% ",
-        "format-alt": "{icon} {time}",
-        "format-icons": ["", "", "", "", ""]
-    },
-    "battery#bat2": {
-        "bat": "BAT2"
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["󰁺","󰁻", "󰁼", "󰁽", "󰁾","󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "interval": 3
+
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        //"format": "{icon} {volume}% {format_source}",
-        "format-muted": " {format_source}",
+        "format-muted": "󰝟 {format_source}",
         "format-source": "{volume}% ",
         "format-source-muted": "",
         "format-icons": {
@@ -160,6 +142,11 @@
         "format": "|    |",
         "tooltip": false
         
+    },
+    "clock": {
+        "timezone": "Europe/Kyiv",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%b %d %A}"
     }
 }
 
